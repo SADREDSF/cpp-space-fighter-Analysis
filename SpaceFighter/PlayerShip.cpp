@@ -7,6 +7,8 @@ void PlayerShip::LoadContent(ResourceManager& resourceManager)
 	ConfineToScreen();
 	SetResponsiveness(0.1);
 
+	
+
 	m_pTexture = resourceManager.Load<Texture>("Textures\\PlayerShip.png");
 
 	AudioSample* pAudio = resourceManager.Load<AudioSample>("Audio\\Effects\\Laser.wav");
@@ -25,13 +27,15 @@ void PlayerShip::Initialize(Level* pLevel, Vector2& startPosition)
 
 void PlayerShip::HandleInput(const InputState& input)
 {
+	float SpeedMod;
+
 	if (IsActive())
 	{
 		Vector2 direction;
 		if (input.IsKeyDown(Key::DOWN)) direction.Y++;
 		if (input.IsKeyDown(Key::UP)) direction.Y--;
 		if (input.IsKeyDown(Key::Right)) direction.X++;
-		if (input.IsKeyDown(Key::Left)) direction.X--;
+		if (input.IsKeyDown(Key::Left)) direction.X--; 
 
 		// Normalize the direction
 		if (direction.X != 0 && direction.Y != 0)
@@ -68,10 +72,12 @@ void PlayerShip::HandleInput(const InputState& input)
 
 void PlayerShip::Update(const GameTime& gameTime)
 {
+	float SpeedMod = 3;
+
 	// Get the velocity for the direction that the player is trying to go.
 	Vector2 targetVelocity = m_desiredDirection * GetSpeed() * gameTime.GetElapsedTime();
 	// We can't go from 0-100 mph instantly! This line interpolates the velocity for us.
-	m_velocity = Vector2::Lerp(m_velocity, targetVelocity, GetResponsiveness());
+	m_velocity = Vector2::Lerp(m_velocity, targetVelocity * SpeedMod, GetResponsiveness());
 	// Move that direction
 	TranslatePosition(m_velocity);
 

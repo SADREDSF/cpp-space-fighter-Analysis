@@ -28,6 +28,7 @@ void Ship::Hit(const float damage)
 	m_hitPoints -= damage;
 	if (m_hitPoints > 0) return;
 
+	std::cout << "Ship Is Destroyed\n";
 	GameObject::Deactivate();
 	GetCurrentLevel()->SpawnExplosion(this);
 }
